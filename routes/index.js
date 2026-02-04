@@ -1,12 +1,24 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/', function(req, res) {
-  res.render('index');
-});
+/* GET home page */
+router.get('/', function(req, res, next) {
 
-router.get('/akash', function(req, res) {
-  res.render('akash');
+  // Store name
+  const storeName = "My Book Store";
+
+  // Books array
+  const books = [
+    { title: "The Alchemist", author: "Paulo Coelho" },
+    { title: "Atomic Habits", author: "James Clear" },
+    { title: "Clean Code", author: "Robert C. Martin" }
+  ];
+
+  // Send data to view
+  res.render('index', {
+    storeName: storeName,
+    books: books
+  });
 });
 
 module.exports = router;

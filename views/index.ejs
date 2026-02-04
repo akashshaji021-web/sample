@@ -1,39 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Travel Blog</title>
-
-    <!-- Internal CSS -->
-    <style>
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            font-family: Arial, sans-serif;
-        }
-
-        p {
-            text-align: center;
-            font-size: 18px;
-            color: #555;
-        }
-    </style>
+    <title><%= storeName %></title>
 </head>
 <body>
 
-    <!-- Blog Title -->
-    <h1>My Travel Blog</h1>
+    <!-- Store Name -->
+    <h1><%= storeName %></h1>
 
-    <!-- Welcome Message -->
-    <p>Welcome to my travel blog! Here I share my adventures and favorite destinations.</p>
+    <!-- Book List -->
+    <ul>
+        <% books.forEach(book => { %>
+            <li>
+                <strong><%= book.title %></strong> - <%= book.author %>
+            </li>
+        <% }) %>
+    </ul>
 
-    <!-- Travel Image -->
-    <div style="text-align:center;">
-        <img 
-            src="/images/big-beach.jpg" 
-            alt="Beach Destination"
-            style="border: 4px solid #e81d1d; width: 400px;"
-        >
-    </div>
+    <!-- Script -->
+    <script>
+        console.log("Welcome to My Book Store!");
+    </script>
 
 </body>
 </html>
