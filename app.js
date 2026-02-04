@@ -1,47 +1,45 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require("express");
+const mongoose = require("mongoose");
+const Product = require("./models/product");
 
-const db = require('./database/db')
+const app = express();
 
-const developerroute =  require('./routes/developer');
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
 
+// MongoDB connection
+mongoose.connect("mongodb://localhost:27017/shopDB")
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.log(err));
 
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
-var app = express();
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(developerroute);
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+// Home → Add product form
+app.get("/", (req, res) => {
+  res.render("add");
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+// Handle form submit
+app.post("/add-product", async (req, res) => {
+  const { name, quantity, price } = req.body;
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  await Product.create({
+    name,
+    quantity,
+    price
+  });
+
+  res.redirect("/products");
 });
 
-module.exports = app;
+// Show all products
+app.get("/products", async (req, res) => {
+  const products = await Product.find();
+  const totalProducts = products.length;
+
+  res.render("list", { products, totalProducts });
+});
+
+// Start server
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
+});
